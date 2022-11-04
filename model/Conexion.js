@@ -31,8 +31,20 @@ module.exports = class Sql{
             reject(err);
         })
     });
-        
-    
+  
  }
+
+ async selectId(table,id){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request().query(`select * from ${table} WHERE Id=${id}`);
+        }).then(result=>{
+            msql.close();
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+}
  
 }
