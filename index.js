@@ -18,9 +18,13 @@ app.get('/cliente/:id',async(req,res)=>{
     conexion =new Sql(config);
     const result=await conexion.selectId('dbo.Clientes',req.params.id);
     console.dir(result)
-    res.send(result);
+    res.json(result);
 })
 
+//consulta get para logearse
+app.get('/login/:user/:password',(req,res)=>{
+    conexion = new Sql(config);
+})
 
 var server=app.listen(3000,()=>{
     console.log('Servidor Corriendo');
