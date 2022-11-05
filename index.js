@@ -10,7 +10,7 @@ app.get('/ClientesQ',async (req,res)=>{
      conexion.connect();
     const result=await conexion.select('dbo.Clientes');
     console.dir(result);
-    res.send(result)
+    res.json(result)
 })
 
 
@@ -26,6 +26,21 @@ app.get('/login/:user/:password',(req,res)=>{
     conexion = new Sql(config);
 })
 
-var server=app.listen(3000,()=>{
-    console.log('Servidor Corriendo');
+//consulta get usuarios
+app.get('/getUsers',async(req,res)=>{
+    try{
+
+    conexion = new Sql(config)
+    const result=await conexion.select('dbo.RegistrodeUsuarios')
+    console.dir(result)
+    res.json(result)
+    }catch(error){
+        console.log(error)
+    }
+})
+
+var puerto=process.env.PORT|3000
+
+var server=app.listen(puerto,()=>{
+    console.log(`Servidor Corriendo en el puerto ${puerto}`);
 })

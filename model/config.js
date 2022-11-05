@@ -1,7 +1,7 @@
 const config = {
     user:'PMDP',
     password:'12345',
-    database:'ProyectoBD',
+    database:'ProyectoFinalBD',
     server:'localhost',
     options:{
         trustServerCertificate:true

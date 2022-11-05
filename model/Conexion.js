@@ -46,5 +46,10 @@ module.exports = class Sql{
         });
     });
 }
+
+
+async selectLogin(username,password){
+    
+}
  
 }
