@@ -4,26 +4,17 @@ var app=express();
 var config=require('./model/config');
 
 
-app.get('/ClientesQ',async (req,res)=>{
-
-    conexion =new Sql(config);
-     conexion.connect();
-    const result=await conexion.select('dbo.Clientes');
-    console.dir(result);
-    res.json(result)
-})
-
-
-app.get('/cliente/:id',async(req,res)=>{
-    conexion =new Sql(config);
-    const result=await conexion.selectId('dbo.Clientes',req.params.id);
-    console.dir(result)
-    res.json(result);
-})
 
 //consulta get para logearse
-app.get('/login/:user/:password',(req,res)=>{
-    conexion = new Sql(config);
+app.get('/login/:user',async(req,res)=>{
+    try {
+        conexion = new Sql(config);
+        const result=await conexion.selectId('dbo.RegistrodeUsuarios',req.params.user)  
+        res.json(result)
+        console.dir(result)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 //consulta get usuarios

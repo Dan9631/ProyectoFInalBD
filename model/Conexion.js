@@ -37,7 +37,7 @@ module.exports = class Sql{
  async selectId(table,id){
     return new Promise((resolve,reject)=>{
         this.connect().then(pool=>{
-            return pool.request().query(`select * from ${table} WHERE Id=${id}`);
+            return pool.request().query(`select * from ${table} WHERE usuarios='${id}'`);
         }).then(result=>{
             msql.close();
             resolve(result);
