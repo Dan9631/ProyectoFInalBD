@@ -35,7 +35,7 @@ app.get('/Usuarios',(req,res)=>{
 
 app.get('/seleccionp',(req,res)=>{
     if(app.get('sesion')){
-    res.render('seleccionp');
+    res.render('seleccionp',{busca:null,respuesta:null});
     }else{
         res.render('index',{respuesta:null});
     }
@@ -209,7 +209,56 @@ app.post('/deleteUser',async (req,res)=>{
     }
 })
 
+//----------------------Rutas para el CRUD de productos----------------------//
+app.post('/createPersonal',async (req,res)=>{
+    try{
+        let codigoUser=req.body.codigoaspirannte
+        let nombre=req.body.Nombres
+        let apellido=req.body.Apellidos
+        let habilidades=req.body.Habilidades
+        console.log(req.body)
+        conexion = new Sql(config)
+        const result=await conexion.createPersonal(codigoUser,nombre,apellido,habilidades)
+        const result2=await conexion.selectPorIDPersonal('dbo.SelecciondePersonal',codigoUser)  
+        console.dir(result2)
+        if(result2.recordset.length>0 ){
+            res.render('seleccionp',{busca:null,respuesta:{message:'Personal creado correctamente'}});
+        }else{
+            res.render('seleccionp',{busca:null,respuesta:{message:'Personal no creado, revise que el id y los datos sean validos'}});
+        }
+        
+       
+    }catch(error){
+        console.log(error)
+        res.render('seleccionp',{respuesta:{message:'Surgio un error en la creacion de la persona, revise que los datos ingresados sean correctos'}});
+    }
+    
+    })
 
+ app.post('/ConsultarPesonal',async (req,res)=>{
+        try{
+            let codigoUser=req.body.codigoaspirante
+            conexion = new Sql(config)
+            const result=await conexion.selectPorIDPersonal('dbo.SelecciondePersonal',codigoUser)  
+            console.dir(result.recordset[0])
+            if(result.recordset.length>0){
+                res.render('seleccionp',{datos:result.recordset[0],busca:true,respuesta:null});
+            }else{
+                res.render('seleccionp',{busca:null,respuesta:{message:'El Personal no existe en la base de datos'}});
+            }
+            
+           
+        }catch(error){
+            console.log(error)
+            res.render('seleccionp',{respuesta:{message:'Surgio un error en la creacion del usuario, revise que los datos ingresados sean correctos'}});
+        }
+        
+        }
+    )
+    
+
+
+//-----------------------------------------------------------------------------
 var puerto=process.env.PORT|3000
 
 var server=app.listen(puerto,()=>{

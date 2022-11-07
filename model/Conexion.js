@@ -135,4 +135,89 @@ async deleteUser(Codigo){
 
 }
  
+
+
+// insercion de registros a la tabla de SeleccionPersonal
+async createPersonal(Codigo,name,lastname,habilidades){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigo',msql.Int,Codigo)
+            .input('nombres',msql.VarChar,name)
+            .input('apellidos',msql.VarChar,lastname)
+            .input('habilidades',msql.VarChar,habilidades)
+            .execute('dbo.CrearSelPersonal',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
+}
+
+
+async modificarPersonal(Codigo,name,lastname,habilidades){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigo',msql.Int,Codigo)
+            .input('nombres',msql.VarChar,name)
+            .input('apellidos',msql.VarChar,lastname)
+            .input('habilidades',msql.VarChar,habilidades)
+            .execute('dbo.ModiSelPersonal',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
+}
+
+async EliminarPersonal(Codigo){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigo',msql.Int,Codigo)
+            .execute('dbo.DelSelPersonal',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
+}
+
+async selectPorIDPersonal(table,id){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request().query(`select * from ${table} WHERE codigoaspirante='${id}'`);
+        }).then(result=>{
+            msql.close();
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+ }
 }
