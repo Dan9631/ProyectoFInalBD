@@ -212,7 +212,7 @@ app.post('/deleteUser',async (req,res)=>{
 //----------------------Rutas para el CRUD de productos----------------------//
 app.post('/createPersonal',async (req,res)=>{
     try{
-        let codigoUser=req.body.codigoaspirannte
+        let codigoUser=req.body.codigoaspirante
         let nombre=req.body.Nombres
         let apellido=req.body.Apellidos
         let habilidades=req.body.Habilidades
@@ -230,7 +230,7 @@ app.post('/createPersonal',async (req,res)=>{
        
     }catch(error){
         console.log(error)
-        res.render('seleccionp',{respuesta:{message:'Surgio un error en la creacion de la persona, revise que los datos ingresados sean correctos'}});
+        res.render('seleccionp',{busca:null,respuesta:{message:'Surgio un error en la creacion de la persona, revise que los datos ingresados sean correctos'}});
     }
     
     })
@@ -255,8 +255,52 @@ app.post('/createPersonal',async (req,res)=>{
         
         }
     )
-    
-
+  
+    app.post('/UpdatePersonal',async (req,res)=>{
+        try{
+            let codigoUser=req.body.codigoaspirante
+            let nombre=req.body.Nombres
+            let apellido=req.body.Apellidos
+            let habilidades=req.body.Habilidades
+            conexion = new Sql(config)
+            var result=await conexion.modificarPersonal(codigoUser,nombre,apellido,habilidades)
+            console.log(result)
+            const result2=await conexion.selectPorIDPersonal('dbo.SelecciondePersonal',codigoUser)  
+            console.dir(result2)
+            if(result2.recordset.length>0){
+                res.render('seleccionp',{datos:result2.recordset[0],busca:true,respuesta:{message:'Personal modificado correctamente'}});
+            }else{
+                res.render('seleccionp',{busca:null,respuesta:{message:'El personal no existe en la base de datos'}});
+            }
+         
+        }catch(error){
+            res.render('seleccionp',{busca:null,respuesta:{message:'Surgio un error en la modificacion del personal, revise que los datos ingresados sean correctos'}});
+          
+            console.log(error)
+        }
+        
+        })
+        
+app.post('/deletePersonal',async (req,res)=>{
+            try{
+                let codigoUser=req.body.codigoaspirante
+                conexion = new Sql(config)
+                var result=await conexion.EliminarPersonal(codigoUser)
+                const result2=await conexion.selectPorIDPersonal('dbo.SelecciondePersonal',codigoUser)  
+                console.dir(result2)
+                
+                if(result2.recordset.length=0 && result2.rowsAffected[0]==0){
+                    res.render('seleccionp',{busca:null,respuesta:{message:'Personal no pudo ser eliminado, revise que el id exista'}});
+                }else{
+                    res.render('seleccionp',{busca:null,respuesta:{message:'El Personal fue eliminado de manera exitosa'}});
+                }
+                
+                
+            }catch(error){
+                res.render('seleccionp',{busca:null,respuesta:{message:'Sucedio un error al eliminar el personal'}});
+                console.log(error)
+            }
+        })      
 
 //-----------------------------------------------------------------------------
 var puerto=process.env.PORT|3000

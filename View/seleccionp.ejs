@@ -11,14 +11,13 @@
 <form action="" method="post" id="FormPersonal">
 <section class="form-register">
     <h4>Selección del Personal</h4>
-<input class="controls" type="text" name="codigoaspirante" id="codigoaspirannte" placeholder="Ingrese codigoaspirannte">
+<input class="controls" type="text" name="codigoaspirante" id="codigoaspirante" placeholder="Ingrese codigoaspirante">
 <input class="controls" type="text" name="Nombres" id="Nombres" placeholder="Ingrese Nombres">
 <input class="controls" type="text" name="Apellidos" id="Apellidos" placeholder="Ingrese Apellidos">
 <input class="controls" type="text" name="Habilidades" id="Habilidades" placeholder="Ingrese Habilidades">
 
 <% if(busca){ %>
     <script>
-        console.log('entre')
         document.getElementById("codigoaspirante").value = "<%= datos.codigoaspirante %>";
         document.getElementById("Nombres").value = "<%= datos.nombres %>";
         document.getElementById("Apellidos").value = "<%= datos.apellidos %>";
@@ -57,14 +56,14 @@
 
     document.getElementById('modificar').addEventListener('click',(e)=>{
        e.preventDefault();
-       formulario.setAttribute('action','/UpdateUser');
+       formulario.setAttribute('action','/UpdatePersonal');
        formulario.submit();
     })
 
     
     document.getElementById('eliminar').addEventListener('click',(e)=>{
        e.preventDefault();
-       formulario.setAttribute('action','/deleteUser');
+       formulario.setAttribute('action','/deletePersonal');
        formulario.submit();
     })
 
