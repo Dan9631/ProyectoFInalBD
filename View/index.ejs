@@ -10,28 +10,31 @@
 
 </head>  
 <body>
-    <form class="formulario">
+    <form class="formulario" action="/login" method="post">
     
     <h1>Login</h1>
      <div class="contenedor">
-     
-     
-         
          <div class="input-contenedor">
          <i class="fas fa-user icon"></i>
-         <input type="text" placeholder="Usuario">
-         
-         </div>
-         
-         <div class="input-contenedor">
+         <input type="text" name="user"  placeholder="Usuario">
+    </div>     
+    <div class="input-contenedor">
          <i class="fas fa-key icon"></i>
-         <input type="password" placeholder="Contraseña">
+         <input type="password" name="password" placeholder="Contraseña">
          
-         </div>
-         <input type="submit" value="Login" class="button">
+    </div>
+         <button type="submit" class="button">
+            Login
+        </button>
          <p>BIENVENIDO</p>
          <p>PROYECTO ERP <a class="link" >BASE DE DATOS I </a></p>
      </div>
+     <% if (respuesta) { %>
+        <script>
+            alert("<%= respuesta.message %>");
+        </script>
+     <%} %>
+
     </form>
 </body>
 </html>
