@@ -47,6 +47,19 @@ module.exports = class Sql{
     });
  }
 
+ async selectPorID(table,id){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request().query(`select * from ${table} WHERE codigousuario='${id}'`);
+        }).then(result=>{
+            msql.close();
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+ }
+
  // insercion de registros a la tabla de usuarios
 async createUser(Codigo,name,lastname,username,password){
     return new Promise((resolve,reject)=>{

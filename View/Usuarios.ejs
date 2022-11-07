@@ -8,17 +8,68 @@
 <title>FORMULARIO</title>
 </head>
 <body>
-<form action="/usuarios" method="post">
+<form action="" method="post" id="FormUsuario">
 <section class="form-register">
     <h4>Registro de Usuarios</h4>
+
 <input class="controls" type="text" name="codigousuario" id="codigousuario" placeholder="Ingrese codigousuario">
 <input class="controls" type="text" name="Nombres" id="Nombres" placeholder="Ingrese Nombres">
 <input class="controls" type="text" name="Apellidos" id="Apellidos" placeholder="Ingrese Apellidos">
 <input class="controls" type="text" name="Usuario" id="Usuario" placeholder="Ingrese Usuario">
 <input class="controls" type="text" name="Contrasena" id="Contrasena" placeholder="Ingrese Contrasena">
-<input class="botons" type="submit" value="Registrar">
+<% if (busca){ %>
+    <script>
+        document.getElementById("codigousuario").value = "<%= datos.codigousuario %>";
+        document.getElementById("Nombres").value = "<%= datos.nombres %>";
+        document.getElementById("Apellidos").value = "<%= datos.apellidos %>";
+        document.getElementById("Usuario").value = "<%= datos.usuarios %>";
+        document.getElementById("Contrasena").value = "<%= datos.contrasenas %>";
+    </script>
+<%} %>
+<input class="botons" type="submit" id='Crear' value="Registrar">
+<input class="botons" type="submit" id='Consultar' value="Consultar">
+<input class="botons" type="submit" id='modificar' value="Modificar">
+<input class="botons" type="submit" id='eliminar' value="Eliminar">
+<a href="/inicio">Regresar Menu</a>
 </section>
 </form>
+<% if (respuesta) { %>
+    <script>
+        alert("<%= respuesta.message %>");
+    </script>
+ <%} %>
+<script>
+    var formulario=document.getElementById('FormUsuario');
+    document.getElementById('Crear').addEventListener('click',(e)=>{
+       e.preventDefault();
+       formulario.setAttribute('action','/createUser');
+       formulario.submit();
+    })
+
+    var formulario=document.getElementById('FormUsuario');
+    document.getElementById('Consultar').addEventListener('click',(e)=>{
+       e.preventDefault();
+       formulario.setAttribute('action','/ConsultarUser');
+       formulario.submit();
+    })
+    
+
+    document.getElementById('modificar').addEventListener('click',(e)=>{
+       e.preventDefault();
+       formulario.setAttribute('action','/UpdateUser');
+       formulario.submit();
+    })
+
+    
+    document.getElementById('eliminar').addEventListener('click',(e)=>{
+       e.preventDefault();
+       formulario.setAttribute('action','/deleteUser');
+       formulario.submit();
+    })
+
+
+</script>
+
 
 </body>
 

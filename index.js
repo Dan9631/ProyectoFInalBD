@@ -24,6 +24,15 @@ app.get('/inicio',(req,res)=>{
         res.render('index',{respuesta:null});
     }
 })
+
+app.get('/Usuarios',(req,res)=>{
+    if(app.get('sesion')){
+    res.render('Usuarios',{busca:null,respuesta:null});
+    }else{
+        res.render('index',{respuesta:null});
+    }
+})
+
 app.get('/seleccionp',(req,res)=>{
     if(app.get('sesion')){
     res.render('seleccionp');
@@ -105,25 +114,74 @@ app.get('/getUsers',async(req,res)=>{
 
 
 //consulta all para crear usuarios
-app.all('/createUser/:Codigo/:name/:lastname/:username/:password',async (req,res)=>{
+app.post('/createUser',async (req,res)=>{
 try{
+    let codigoUser=req.body.codigousuario
+    let user=req.body.Usuario
+    let password=req.body.Contrasena
+    let nombre=req.body.Nombres
+    let apellido=req.body.Apellidos
+
     conexion = new Sql(config)
-    var result=await conexion.createUser(req.params.Codigo,req.params.name,req.params.lastname,req.params.username,req.params.password)
-    res.json({message:'Usuario creado',status:200})
-    console.log('Usuario creado',result)
+    const result=await conexion.createUser(codigoUser,nombre,apellido,user,password)
+    const result2=await conexion.selectPorID('dbo.RegistrodeUsuarios',codigoUser)  
+    console.dir(result2)
+    if(result2.recordset.length>0 && result2.recordset[0].usuarios==user){
+        res.render('Usuarios',{busca:null,respuesta:{message:'Usuario creado correctamente'}});
+    }else{
+        res.render('Usuarios',{busca:null,respuesta:{message:'Usuario no creado, revise que el id y el username no existan'}});
+    }
+    
+   
 }catch(error){
     console.log(error)
+    res.render('Usuarios',{respuesta:{message:'Surgio un error en la creacion del usuario, revise que los datos ingresados sean correctos'}});
 }
 
 })
 
-//modificar datos usuario por una consulta all
-app.all('/UpdateUser/:Codigo/:name/:lastname/:username/:password',async (req,res)=>{
+app.post('/ConsultarUser',async (req,res)=>{
     try{
+        let codigoUser=req.body.codigousuario
         conexion = new Sql(config)
-        var result=await conexion.modificarUser(req.params.Codigo,req.params.name,req.params.lastname,req.params.username,req.params.password)
-        res.json({message:'Usuario modificado',status:200})
-        console.log('Usuario modificado',result)
+        const result=await conexion.selectPorID('dbo.RegistrodeUsuarios',codigoUser)  
+        console.dir(result)
+        if(result.recordset.length>0){
+            res.render('Usuarios',{datos:result.recordset[0],busca:true,respuesta:null});
+        }else{
+            res.render('Usuarios',{busca:null,respuesta:{message:'El usuario no existe en la base de datos'}});
+        }
+        
+       
+    }catch(error){
+        console.log(error)
+        res.render('Usuarios',{respuesta:{message:'Surgio un error en la creacion del usuario, revise que los datos ingresados sean correctos'}});
+    }
+    
+    }
+)
+
+
+//modificar datos usuario por una consulta all
+app.post('/UpdateUser',async (req,res)=>{
+    try{
+        let codigoUser=req.body.codigousuario
+        let user=req.body.Usuario
+        let password=req.body.Contrasena
+        let nombre=req.body.Nombres
+        let apellido=req.body.Apellidos
+    
+        conexion = new Sql(config)
+        var result=await conexion.modificarUser(codigoUser,nombre,apellido,user,password)
+        console.log(result)
+        const result2=await conexion.selectPorID('dbo.RegistrodeUsuarios',codigoUser)  
+        console.dir(result2)
+        if(result2.recordset.length>0){
+            res.render('Usuarios',{datos:result2.recordset[0],busca:true,respuesta:{message:'Usuario modificado correctamente'}});
+        }else{
+            res.render('Usuarios',{busca:null,respuesta:{message:'El usuario no existe en la base de datos'}});
+        }
+     
     }catch(error){
         console.log(error)
     }
@@ -131,14 +189,22 @@ app.all('/UpdateUser/:Codigo/:name/:lastname/:username/:password',async (req,res
     })
 
 //eliminar usuario por una consulta all
-app.all('/deleteUser/:Codigo',async (req,res)=>{
+app.post('/deleteUser',async (req,res)=>{
     try{
+        let codigoUser=req.body.codigousuario
         conexion = new Sql(config)
-        var result=await conexion.deleteUser(req.params.Codigo)
+        var result=await conexion.deleteUser(codigoUser)
+        const result2=await conexion.selectPorID('dbo.RegistrodeUsuarios',codigoUser)  
+        console.dir(result2)
+        if(result2.recordset.length=0){
+            res.render('Usuarios',{busca:null,respuesta:{message:'Usuario no pudo ser eliminado, revise que el id exista'}});
+        }else{
+            res.render('Usuarios',{busca:null,respuesta:{message:'El usuario fue eliminado de manera exitosa'}});
+        }
         
-        res.json({message:'Usuario eliminado',status:200})
-        console.log('Usuario eliminado',result)
+        
     }catch(error){
+        res.render('Usuarios',{busca:null,respuesta:{message:'Sucedio un error al eliminar el usuario'}});
         console.log(error)
     }
 })
