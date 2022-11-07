@@ -45,11 +45,81 @@ module.exports = class Sql{
             reject(err);
         });
     });
+ }
+
+ // insercion de registros a la tabla de usuarios
+async createUser(Codigo,name,lastname,username,password){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigo',msql.Int,Codigo)
+            .input('nombres',msql.VarChar,name)
+            .input('apellidos',msql.VarChar,lastname)
+            .input('usuarios',msql.VarChar,username)
+            .input('contrasenas',msql.VarChar,password)	
+            .execute('dbo.DatosPersona',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
 }
 
 
-async selectLogin(username,password){
-    
+// insercion de registros a la tabla de usuarios
+async modificarUser(Codigo,name,lastname,username,password){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigousuario',msql.Int,Codigo)
+            .input('nombres',msql.VarChar,name)
+            .input('apellidos',msql.VarChar,lastname)
+            .input('usuarios',msql.VarChar,username)
+            .input('contrasenas',msql.VarChar,password)	
+            .execute('dbo.SP_ModificarPersona',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
+}
+
+//consulta para eliminar un usuario
+async deleteUser(Codigo){
+    return new Promise((resolve,reject)=>{
+        this.connect().then(pool=>{
+            return pool.request()
+            .input('codigousuario',msql.Int,Codigo)
+            .execute('dbo.SP_EliminarPersona',(err,result)=>{
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(result);
+               }
+            })
+        }).then(result=>{
+            resolve(result);
+        }).catch(err=>{
+            reject(err);
+        });
+    });
+
 }
  
 }
